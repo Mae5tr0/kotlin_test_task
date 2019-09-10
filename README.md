@@ -8,3 +8,17 @@
 * Create a Dockerfile to run the service.
 * Please use Git for this project. When you're done please create a zip-file of your working directory.
 * The goal isn't to build a ready product, but rather to get an idea of your skills. Please do not spend much time on this task, just let us know how much time you spent.
+
+## How to run
+
+* Build and run docker image
+```bash 
+ docker build -t kotlin_test_task .
+ docker run -d -it -p 80:8080 --name=ktt kotlin_test_task
+ ```
+ 
+ * Open [http://localhost/swagger-ui.html/](http://localhost/swagger-ui.html) for inspecting API
+
+## How to run test
+
+TODO
