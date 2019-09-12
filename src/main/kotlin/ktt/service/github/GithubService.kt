@@ -16,7 +16,7 @@ import java.util.stream.Collectors
 const val GITHUB_API = "https://api.github.com"
 
 @Service
-class GithubService {
+class GithubService(val apiHost : String = GITHUB_API) {
     fun searchUser(language : String, page : Int, per_page : Int) : PagedResult {
         val searchResult = findUsers("q=language:$language&page=$page&per_page=$per_page")
 
@@ -35,7 +35,7 @@ class GithubService {
             .map { user ->
                 client
                     .sendAsync(
-                        HttpRequest.newBuilder(URI("$GITHUB_API/users/$user"))
+                        HttpRequest.newBuilder(URI("$apiHost/users/$user"))
                             .GET()
                             .build(),
                         HttpResponse.BodyHandlers.ofString()
@@ -60,12 +60,13 @@ class GithubService {
         val client = HttpClient.newHttpClient()
         val response = client.send(
             HttpRequest
-                .newBuilder(URI("$GITHUB_API/search/users?$query"))
+                .newBuilder(URI("$apiHost/search/users?$query"))
                 .GET()
                 .build(),
             HttpResponse.BodyHandlers.ofString()
         )
 
+        println(response.body())
         val mapper = jacksonObjectMapper()
         return mapper.readValue(response.body())
     }
