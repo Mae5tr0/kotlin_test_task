@@ -4,7 +4,7 @@ import junit.framework.Assert.assertEquals
 import ktt.service.github.GithubClient
 import org.junit.Test
 import ktt.service.github.GithubService
-import ktt.service.github.models.GithubSearch
+import ktt.service.github.models.GithubResponse
 import ktt.service.github.models.GithubUser
 import org.junit.Before
 import java.util.concurrent.CompletableFuture
@@ -47,7 +47,7 @@ class GithubServiceTests {
         assertEquals("sdiehl", result.data[1].login)
     }
 
-    private fun searchResult(filename: String): GithubSearch {
+    private fun searchResult(filename: String): GithubResponse {
         val mapper = jacksonObjectMapper()
         val fileStream = FileInputStream("src/test/resources/github_responses/$filename.json")
         return mapper.readValue(fileStream)

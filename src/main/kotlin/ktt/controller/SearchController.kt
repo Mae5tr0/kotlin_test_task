@@ -18,8 +18,8 @@ class SearchController(
     @ApiOperation(value = "Search for GitHub users by the programming language")
     @GetMapping("/search")
     fun search(
-        @RequestParam(name = "language") language: String,
-        @RequestParam(name = "page", defaultValue = DEFAULT_PAGE) page: Int,
-        @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) limit: Int
+        @RequestParam language: String,
+        @RequestParam(defaultValue = DEFAULT_PAGE) page: Int,
+        @RequestParam(defaultValue = DEFAULT_LIMIT) limit: Int
     ): PagedResult<GithubUser> = githubService.searchUsers(language, page, limit)
 }

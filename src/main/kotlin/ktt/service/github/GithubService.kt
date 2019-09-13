@@ -11,11 +11,11 @@ import java.util.concurrent.CompletableFuture.allOf
 class GithubService(private val client: GithubClient) {
 
     @Throws(Throwable::class)
-    fun searchUsers(language: String, page: Int, per_page: Int): PagedResult<GithubUser> {
-        val searchResult = client.searchUsers(language, page, per_page).get()
+    fun searchUsers(language: String, page: Int, limit: Int): PagedResult<GithubUser> {
+        val searchResult = client.searchUsers(language, page, limit).get()
 
-        val userLogins: List<String> = searchResult.items.mapNotNull { user -> user["login"] }
-        val usersFutures: MutableList<CompletableFuture<GithubUser>> =
+        val userLogins: List<String> = searchResult.items.mapNotNull { it["login"] }
+        val usersFutures: List<CompletableFuture<GithubUser>> =
             userLogins
                 .stream()
                 .map { userLogin -> client.getUser(userLogin) }
@@ -29,7 +29,6 @@ class GithubService(private val client: GithubClient) {
                 .collect(Collectors.toList())
         }.get()
 
-        return PagedResult(users, searchResult.total_count, per_page, page)
+        return PagedResult(users, searchResult.total_count, limit, page)
     }
 }
-
