@@ -1,45 +1,59 @@
 package ktt.service
 
-//import org.junit.Test
-//import org.junit.Rule
-//import ktt.service.github.GithubService
-//import org.junit.Before
-//import org.junit.runner.RunWith
-//import org.springframework.beans.factory.annotation.Autowired
-//
-////@RunWith(SpringRunner.class)
-////@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-////@AutoConfigureWireMock(port = 0)
-//public class GithubServiceTests(private var service: GithubService) {
-//
-////	@Before
-////	fun setup() : Unit {
-////        service = GithubService(("http://localhost:${this.environment.getProperty("wiremock.server.port")}")
-////	}
-////
-////    @Test
-////    fun testSearchUser() : Unit {
-////        val github : GithubService = GithubService("http://localhost:8089")
-////
-////        stubFor(
-////            get(urlEqualTo("/my/resource"))
-////                .willReturn(
-////                    aResponse()
-////                        .withStatus(200)
-////                        .withHeader("Content-Type", "text/xml")
-////                        .withBody("<response>Some content</response>")
-////                )
-////        )
-//
-////        val result = myHttpServiceCallingObject.doSomething()
-////        assertTrue(result.wasSuccessful())
-//
-////        verify(
-////            postRequestedFor(urlMatching("/my/resource/[a-z0-9]+"))
-////                .withRequestBody(matching(".*<message>1234</message>.*"))
-////                .withHeader("Content-Type", notMatching("application/json"))
-////        )
-//
-//        println("super puper")
-//    }
-//}
+import junit.framework.Assert.assertEquals
+import ktt.service.github.GithubClient
+import org.junit.Test
+import ktt.service.github.GithubService
+import ktt.service.github.models.GithubSearch
+import ktt.service.github.models.GithubUser
+import org.junit.Before
+import java.util.concurrent.CompletableFuture
+import org.mockito.Mockito.`when`
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import org.mockito.Mockito.mock
+import java.io.FileInputStream
+
+public class GithubServiceTests {
+    private lateinit var client : GithubClient
+    private lateinit var githubService: GithubService
+
+    @Before
+    fun setup() {
+        client = mock(GithubClient::class.java)
+        githubService = GithubService(client)
+    }
+
+    @Test
+    fun testSearchUser() : Unit {
+        `when`(client.searchUsers("haskell", 0, 2))
+            .thenReturn(CompletableFuture.completedFuture(
+                searchResult("search_by_language")
+            ))
+        `when`(client.getUser("ekmett"))
+            .thenReturn(CompletableFuture.completedFuture(userInfo("ekmett")))
+        `when`(client.getUser("sdiehl"))
+            .thenReturn(CompletableFuture.completedFuture(userInfo("sdiehl")))
+
+        val result = githubService.searchUsers("haskell", 0, 2)
+
+        assertEquals(11749, result.total)
+        assertEquals(2, result.limit)
+        assertEquals(0, result.page)
+        assertEquals(2, result.data.size)
+        assertEquals("ekmett", (result.data[0] as GithubUser).login)
+        assertEquals("sdiehl", (result.data[1] as GithubUser).login)
+    }
+
+    private fun searchResult(filename : String) : GithubSearch {
+        val mapper = jacksonObjectMapper()
+        val fileStream = FileInputStream("src/test/resources/github_responses/$filename.json")
+        return mapper.readValue(fileStream)
+    }
+
+    private fun userInfo(login : String) : GithubUser {
+        val mapper = jacksonObjectMapper()
+        val fileStream = FileInputStream("src/test/resources/github_responses/user_$login.json")
+        return mapper.readValue(fileStream)
+    }
+}

@@ -8,7 +8,7 @@ import java.util.stream.Collectors
 import java.util.concurrent.CompletableFuture.allOf
 
 @Service
-class GithubService(val client: GithubClient) {
+class GithubService(private val client: GithubClient) {
 
     @Throws(Throwable::class)
     fun searchUsers(language : String, page : Int, per_page : Int) : PagedResult {
