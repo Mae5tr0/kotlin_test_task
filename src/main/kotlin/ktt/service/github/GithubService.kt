@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture.allOf
 class GithubService(private val client: GithubClient) {
 
     @Throws(Throwable::class)
-    fun searchUsers(language : String, page : Int, per_page : Int) : PagedResult {
+    fun searchUsers(language : String, page : Int, per_page : Int) : PagedResult<GithubUser> {
         val searchResult = client.searchUsers(language, page, per_page).get()
 
         val userLogins : List<String> = searchResult.items.mapNotNull { user -> user["login"] }

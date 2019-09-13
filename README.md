@@ -22,10 +22,6 @@ just let us know how much time you spent.
  
  * Open [http://localhost/swagger-ui.html/](http://localhost/swagger-ui.html) for inspecting API
 
-## How to run test
-
-TODO
-
 ## What's else?
 
 Error handling, logs, integration testing, public method documentation, etc...

@@ -27,7 +27,7 @@ class SwaggerConfig {
 
     private fun getApiInfo(): ApiInfo {
         return ApiInfoBuilder().title("Kotlin Test Task API")
-            .description("Employee Management REST API")
+            .description("Test task on Spring Boot with Kotlin")
             .version("0.0.1")
             .build()
     }

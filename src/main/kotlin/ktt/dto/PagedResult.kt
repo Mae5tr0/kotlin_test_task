@@ -1,7 +1,7 @@
 package ktt.dto
 
-data class PagedResult(
-    val data: List<Any>,
+data class PagedResult<T>(
+    val data: List<T>,
     val total: Int,
     val limit: Int,
     val page: Int
