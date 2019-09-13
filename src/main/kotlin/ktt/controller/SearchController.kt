@@ -1,6 +1,9 @@
 package ktt.controller
 
 import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiResponse
+import io.swagger.annotations.ApiResponses
 import ktt.service.github.GithubService
 import org.springframework.web.bind.annotation.*
 
@@ -21,10 +24,20 @@ class SearchController(
   val githubService: GithubService
 ) {
 
+//    @ApiOperation(
+//        httpMethod = "GET",
+//        value = "Search for GitHub users by the programming language",
+//        response = String.class,
+//        responseContainer = "List"
+//    )
+//    @ApiResponses(value = {
+//        @ApiResponse(code = 404, message = "Countries not found"),
+//        @ApiResponse(code = 500, message = "The countries could not be fetched")
+//    })
     @GetMapping("/search")
     fun search(
         @RequestParam(name = "language") language: String,
         @RequestParam(name = "page", defaultValue = DEFAULT_PAGE) page: Int,
         @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) limit: Int
-    ) = githubService.searchUser(language, page, limit)
+    ) = githubService.searchUsers(language, page, limit)
 }

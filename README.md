@@ -28,4 +28,4 @@ TODO
 
 ## What's else?
 
-Error handling, logs, integration testing.
+Error handling, logs, integration testing, public method documentation, etc...
