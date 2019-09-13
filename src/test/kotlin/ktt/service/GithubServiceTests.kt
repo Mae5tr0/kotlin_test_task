@@ -14,8 +14,8 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import org.mockito.Mockito.mock
 import java.io.FileInputStream
 
-public class GithubServiceTests {
-    private lateinit var client : GithubClient
+class GithubServiceTests {
+    private lateinit var client: GithubClient
     private lateinit var githubService: GithubService
 
     @Before
@@ -25,11 +25,13 @@ public class GithubServiceTests {
     }
 
     @Test
-    fun testSearchUser() : Unit {
+    fun testSearchUser() {
         `when`(client.searchUsers("haskell", 0, 2))
-            .thenReturn(CompletableFuture.completedFuture(
-                searchResult("search_by_language")
-            ))
+            .thenReturn(
+                CompletableFuture.completedFuture(
+                    searchResult("search_by_language")
+                )
+            )
         `when`(client.getUser("ekmett"))
             .thenReturn(CompletableFuture.completedFuture(userInfo("ekmett")))
         `when`(client.getUser("sdiehl"))
@@ -41,17 +43,17 @@ public class GithubServiceTests {
         assertEquals(2, result.limit)
         assertEquals(0, result.page)
         assertEquals(2, result.data.size)
-        assertEquals("ekmett", (result.data[0] as GithubUser).login)
-        assertEquals("sdiehl", (result.data[1] as GithubUser).login)
+        assertEquals("ekmett", result.data[0].login)
+        assertEquals("sdiehl", result.data[1].login)
     }
 
-    private fun searchResult(filename : String) : GithubSearch {
+    private fun searchResult(filename: String): GithubSearch {
         val mapper = jacksonObjectMapper()
         val fileStream = FileInputStream("src/test/resources/github_responses/$filename.json")
         return mapper.readValue(fileStream)
     }
 
-    private fun userInfo(login : String) : GithubUser {
+    private fun userInfo(login: String): GithubUser {
         val mapper = jacksonObjectMapper()
         val fileStream = FileInputStream("src/test/resources/github_responses/user_$login.json")
         return mapper.readValue(fileStream)

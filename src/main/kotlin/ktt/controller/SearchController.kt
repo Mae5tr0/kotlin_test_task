@@ -10,9 +10,9 @@ const val DEFAULT_PAGE = "0"
 const val DEFAULT_LIMIT = "10"
 
 @RestController
-@Api(value = "User", description = "Rest API for user operations", tags = arrayOf("User API"))
+@Api(value = "User", description = "Rest API for user operations", tags = ["User API"])
 class SearchController(
-  val githubService: GithubService
+    val githubService: GithubService
 ) {
 
     @ApiOperation(value = "Search for GitHub users by the programming language")
@@ -21,5 +21,5 @@ class SearchController(
         @RequestParam(name = "language") language: String,
         @RequestParam(name = "page", defaultValue = DEFAULT_PAGE) page: Int,
         @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) limit: Int
-    ) : PagedResult<GithubUser> = githubService.searchUsers(language, page, limit)
+    ): PagedResult<GithubUser> = githubService.searchUsers(language, page, limit)
 }
